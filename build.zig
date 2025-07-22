@@ -73,12 +73,16 @@ pub fn build(b: *std.Build) void {
         .link_libc = true,
         .optimize = optimize,
     });
-
+    const zphysics = b.dependency("zphysics", .{
+        .use_double_precision = false,
+        .enable_cross_platform_determinism = true,
+    });
     const zflecs = b.dependency("zflecs", .{});
     exe.root_module.addImport("zflecs", zflecs.module("root"));
+    exe.root_module.addImport("zphysics", zphysics.module("root"));
+    exe.linkLibrary(zphysics.artifact("joltc"));
     exe.linkLibrary(zflecs.artifact("flecs"));
     exe.linkLibrary(raylib_artifact);
-    exe.linkSystemLibrary("recastnavigation");
     exe.root_module.addImport("raylib", raylib);
     exe.root_module.addImport("raygui", raygui);
     b.installArtifact(exe);

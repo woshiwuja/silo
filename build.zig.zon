@@ -44,6 +44,10 @@
             .url = "git+https://github.com/zig-gamedev/zflecs#13d66e8c5f74bbe574afe1bb37c26f799971ca4a",
             .hash = "zflecs-0.2.0-dev-1PN3yiZgNgA6YGAs6AJox0Fvvkkkk9Vu_sJF_QRoSXjY",
         },
+        .zphysics = .{
+            .url = "git+https://github.com/zig-gamedev/zphysics#df5fda363b4bbcc878d58ddc8483533592b42211",
+            .hash = "zphysics-0.2.0-dev-nZDEABH7QgDqgTTQ4aLHh6ACs4meOtK3OisF_bxI0wAR",
+        },
     },
     .paths = .{
         "build.zig",
