@@ -12,6 +12,8 @@ zig build
 ./zig-out/build/silo
 ```
 
-Needs zig 0.14
+Needs zig 0.14.1
 
-Once it has started you can visit https://flecs.dev/explorer and it should connect to your instance 
+The packages should get downloaded automatically
+
+Once it has started you can visit https://flecs.dev/explorer and it should connect to your instance.
