@@ -9,9 +9,9 @@ const rg = @import("raygui");
 const std = @import("std");
 const ecs = @import("zflecs");
 const ent = @import("./entity.zig");
-const cmp = @import("./component.zig");
+const cmp = @import("./components.zig");
 const stm = @import("./systems.zig");
-
+const config = @import("./flecs_config.zig");
 const Arraylist = std.ArrayList;
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 const allocator = gpa.allocator();
@@ -42,18 +42,7 @@ pub const Game = struct {
         self.window.openWindow();
         gui.loadStyle(.amber);
         self.world = ecs.init();
-        const EcsRest = ecs.lookup_fullpath(self.world, "flecs.rest.Rest");
-        const EcsRestVal: ecs.EcsRest = .{};
-        _ = ecs.import_c(self.world, ecs.FlecsStatsImport, "FlecsStats");
-        _ = ecs.set_id(self.world, EcsRest, EcsRest, @sizeOf(ecs.EcsRest), &EcsRestVal);
-        ecs.COMPONENT(self.world, cmp.Position);
-        ecs.COMPONENT(self.world, cmp.ScreenPosition);
-        ecs.COMPONENT(self.world, cmp.Velocity);
-        ecs.COMPONENT(self.world, Camera);
-        ecs.COMPONENT(self.world, cmp.Health);
-        _ = ecs.ADD_SYSTEM(self.world, "draw", ecs.OnUpdate, stm.draw_model);
-        _ = ecs.ADD_SYSTEM(self.world, "move system", ecs.OnUpdate, stm.move_system);
-        _ = ecs.ADD_SYSTEM(self.world, "draw health", ecs.OnUpdate, stm.draw_health_text);
+        config.configFlecs(self.world);
     }
     pub fn loop(self: *Game) !void {
         var map = try Map.initDefault();
@@ -70,9 +59,10 @@ pub const Game = struct {
             rl.clearBackground(.ray_white);
             self.camera.beginMode3D();
             self.window.update();
-            _ = ecs.progress(self.world, 0);
             map.update();
+            _ = ecs.progress(self.world, 0);
             rl.endMode3D();
+            _ = ecs.progress(self.world, 0);
             try guiLoop(self, &map);
         }
     }
@@ -127,7 +117,7 @@ pub const Game = struct {
                 //try self.entities.append(Entity{ .id = counter, .position = .init(@floatFromInt(counter + 2), @floatFromInt(counter), 0), .started = false });
                 const e = ecs.new_id(self.world);
                 _ = ecs.set(self.world, e, cmp.Position, .{ .x = 20, .y = 20, .z = 20 });
-                _ = ecs.set(self.world, e, cmp.Velocity, .{ .x = 10, .y = 0, .z = 0 });
+                _ = ecs.set(self.world, e, cmp.Velocity, .{ .x = 0, .y = 1, .z = 0 });
                 _ = ecs.set(self.world, e, cmp.Health, .{ .min = 0, .max = 100, .current = 100 });
                 counter += 1;
             },
@@ -144,7 +134,7 @@ pub const Game = struct {
     }
 
     pub fn end(self: *Game) void {
-        rl.closeWindow();
         _ = ecs.fini(self.world);
+        rl.closeWindow();
     }
 };
