@@ -5,10 +5,10 @@ on:
 jobs:
   build:
     name: "test"
-    runs-on: ubuntu-latest
+    runs-on: alpine:latest
     steps:
       - run: |
-          apt update
-          apt install zig
+          sudo apk update
+          sudo apk add zig
           zig build
     
