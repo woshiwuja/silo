@@ -13,3 +13,5 @@ zig build
 ```
 
 Needs zig 0.14
+
+Once it has started you can visit https://flecs.dev/explorer and it should connect to your instance 
